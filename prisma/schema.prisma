@@ -14,5 +14,14 @@ model Account {
   geminiNextRefresh    DateTime?
   claudeQuotaAvailable Boolean   @default(true)
   geminiQuotaAvailable Boolean   @default(true)
+  planType             String    @default("yearly")
   createdAt            DateTime  @default(now())
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  auth      String
+  p256dh    String
+  createdAt DateTime @default(now())
 }

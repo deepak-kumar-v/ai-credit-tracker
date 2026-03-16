@@ -14,6 +14,7 @@ export interface AccountWithTimers {
   geminiNextRefresh: Date | null;
   claudeQuotaAvailable: boolean;
   geminiQuotaAvailable: boolean;
+  planType: string;
 }
 
 export function calculateTimers(account: Account, now: Date): AccountWithTimers {
@@ -59,6 +60,7 @@ export function calculateTimers(account: Account, now: Date): AccountWithTimers 
     geminiRemainingMs,
     geminiNextRefresh,
     geminiQuotaAvailable,
+    planType: 'planType' in account ? account.planType as string : "yearly",
   };
 }
 

@@ -41,7 +41,8 @@ export function AccountTable({
       <table className="w-full text-left font-mono text-sm leading-relaxed border-collapse">
         <thead className="border-b border-[#333] text-[#a1a1aa]">
           <tr>
-            <th className="py-3 px-4 w-2/5 font-medium border border-[#333]">Account</th>
+            <th className="py-3 px-4 w-[25%] font-medium border border-[#333]">Account</th>
+            <th className="py-3 px-4 w-[15%] font-medium border border-[#333]">Plan</th>
             <th className="py-3 px-4 w-[20%] font-medium border border-[#333]">Claude</th>
             <th className="py-3 px-4 w-[20%] font-medium border border-[#333]">Gemini</th>
             <th className="py-3 px-4 w-[20%] text-center font-medium border border-[#333]">Actions</th>
@@ -55,23 +56,26 @@ export function AccountTable({
               <td className={`py-3 px-4 truncate border border-[#333] ${isRecommended ? 'text-[#22c55e]' : ''}`}>
                 {acc.email}
               </td>
-              <td className="py-3 px-4 border border-[#333]">
+              <td className={`py-3 px-4 border border-[#333] ${acc.planType === 'monthly_trial' ? 'text-[#facc15]' : 'text-[#a1a1aa]'}`}>
+                {acc.planType === 'monthly_trial' ? 'monthly_trial' : 'yearly'}
+              </td>
+              <td className="py-3 px-4 border border-[#333] whitespace-nowrap">
                 {acc.claudeQuotaAvailable ? (
                   <div className="text-[#22c55e] mb-1 animate-pulse">available</div>
                 ) : (
-                  <div className="text-[#9ca3af] mb-1">exhausted</div>
+                  <div className="text-[#ef4444] mb-1 animate-pulse">exhausted</div>
                 )}
-                <div className="text-xs text-[#a1a1aa] min-h-[16px]">
+                <div className="text-xs text-[#a1a1aa] min-h-[16px] whitespace-nowrap">
                   {formatMs(acc.claudeRemainingMs) ? `refresh ${formatMs(acc.claudeRemainingMs)}` : ""}
                 </div>
               </td>
-              <td className="py-3 px-4 border border-[#333]">
+              <td className="py-3 px-4 border border-[#333] whitespace-nowrap">
                 {acc.geminiQuotaAvailable ? (
                   <div className="text-[#22c55e] mb-1 animate-pulse">available</div>
                 ) : (
-                  <div className="text-[#9ca3af] mb-1">exhausted</div>
+                  <div className="text-[#ef4444] mb-1 animate-pulse">exhausted</div>
                 )}
-                <div className="text-xs text-[#a1a1aa] min-h-[16px]">
+                <div className="text-xs text-[#a1a1aa] min-h-[16px] whitespace-nowrap">
                   {formatMs(acc.geminiRemainingMs) ? `refresh ${formatMs(acc.geminiRemainingMs)}` : ""}
                 </div>
               </td>
@@ -107,7 +111,7 @@ export function AccountTable({
           })}
           {accounts.length === 0 && (
             <tr>
-              <td colSpan={4} className="py-4 text-center text-[#a1a1aa] border border-[#333]">
+              <td colSpan={5} className="py-4 text-center text-[#a1a1aa] border border-[#333]">
                 No accounts found.
               </td>
             </tr>

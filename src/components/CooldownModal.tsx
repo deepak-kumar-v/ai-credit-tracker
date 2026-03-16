@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { setClaudeCooldown, setGeminiCooldown } from "@/actions/account";
 
 type ModalType = "CLAUDE" | "GEMINI" | null;
@@ -18,6 +18,16 @@ export function CooldownModal({
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [days, setDays] = useState("0");
+  const [hours, setHours] = useState("0");
+  const [minutes, setMinutes] = useState("0");
+
+  useEffect(() => {
+    setDays("0");
+    setHours("0");
+    setMinutes("0");
+    setError("");
+  }, [accountId, type]);
 
   if (!type) return null;
 
@@ -25,12 +35,12 @@ export function CooldownModal({
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    const days = parseInt(formData.get("days") as string) || 0;
-    const hours = parseInt(formData.get("hours") as string) || 0;
-    const minutes = parseInt(formData.get("minutes") as string) || 0;
+    const d = parseInt(days) || 0;
+    const h = parseInt(hours) || 0;
+    const m = parseInt(minutes) || 0;
     const quotaAvailable = formData.get("quotaStatus") === "available";
 
-    if (days === 0 && hours === 0 && minutes === 0) {
+    if (d === 0 && h === 0 && m === 0) {
       setError("Error: Refresh period must be greater than 0");
       setLoading(false);
       return;
@@ -38,9 +48,9 @@ export function CooldownModal({
     setError("");
 
     if (type === "CLAUDE") {
-      await setClaudeCooldown(accountId, days, hours, minutes, quotaAvailable);
+      await setClaudeCooldown(accountId, d, h, m, quotaAvailable);
     } else {
-      await setGeminiCooldown(accountId, days, hours, minutes, quotaAvailable);
+      await setGeminiCooldown(accountId, d, h, m, quotaAvailable);
     }
     
     setLoading(false);
@@ -98,7 +108,8 @@ export function CooldownModal({
                   type="number" 
                   name="days"
                   min="0"
-                  defaultValue={0}
+                  value={days}
+                  onChange={(e) => setDays(e.target.value)}
                   className="terminal-input w-full p-2 text-center text-lg mb-1"
                 />
                 <label className="block text-[10px] uppercase text-[#a1a1aa] text-center">Days</label>
@@ -108,7 +119,8 @@ export function CooldownModal({
                   type="number" 
                   name="hours"
                   min="0"
-                  defaultValue={0}
+                  value={hours}
+                  onChange={(e) => setHours(e.target.value)}
                   className="terminal-input w-full p-2 text-center text-lg mb-1"
                 />
                 <label className="block text-[10px] uppercase text-[#a1a1aa] text-center">Hours</label>
@@ -118,8 +130,8 @@ export function CooldownModal({
                   type="number" 
                   name="minutes"
                   min="0"
-                  max="59"
-                  defaultValue={30}
+                  value={minutes}
+                  onChange={(e) => setMinutes(e.target.value)}
                   className="terminal-input w-full p-2 text-center text-lg mb-1"
                 />
                 <label className="block text-[10px] uppercase text-[#a1a1aa] text-center">Minutes</label>

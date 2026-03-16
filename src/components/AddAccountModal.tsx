@@ -48,6 +48,31 @@ export function AddAccountModal() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm uppercase mb-2 text-[#a1a1aa]">Plan Type</label>
+                <div className="flex gap-4 mt-2">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="planType" 
+                      value="yearly"
+                      defaultChecked
+                      className="accent-[#22c55e]"
+                    />
+                    <span className="text-white">Yearly Plan</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="planType" 
+                      value="monthly_trial"
+                      className="accent-[#22c55e]"
+                    />
+                    <span className="text-[#a1a1aa]">Monthly Trial</span>
+                  </label>
+                </div>
+              </div>
+
               <div className="pt-2 flex justify-end gap-4">
                 <button 
                   type="button" 

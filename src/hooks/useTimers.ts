@@ -57,19 +57,26 @@ export function useTimers(initialAccounts: Account[]) {
 
 export function formatMs(ms: number) {
   if (ms <= 0) return null;
-  const totalSeconds = Math.floor(ms / 1000);
-  const totalMinutes = Math.floor(totalSeconds / 60);
   
+  const totalSeconds = Math.ceil(ms / 1000);
+  if (totalSeconds < 60) {
+    return `${totalSeconds}s`;
+  }
+  
+  const totalMinutes = Math.ceil(ms / 60000);
   const d = Math.floor(totalMinutes / 1440);
   const h = Math.floor((totalMinutes % 1440) / 60);
   const m = totalMinutes % 60;
   
-  const parts = [];
-  if (d > 0) parts.push(`${d}d`);
-  if (h > 0) parts.push(`${h}h`);
-  if (m > 0) parts.push(`${m}m`);
+  if (d > 0) {
+    if (h > 0) return `${d}d ${h}h`;
+    return `${d}d`;
+  }
   
-  if (parts.length === 0) return "0m";
+  if (h > 0) {
+    if (m > 0) return `${h}h ${m}m`;
+    return `${h}h`;
+  }
   
-  return parts.join(" ");
+  return `${m}m`;
 }
