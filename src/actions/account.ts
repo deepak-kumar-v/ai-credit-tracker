@@ -23,10 +23,10 @@ export async function addAccount(formData: FormData) {
   revalidatePath("/");
 }
 
-export async function setClaudeCooldown(id: string, hours: number, minutes: number, quotaAvailable?: boolean) {
+export async function setClaudeCooldown(id: string, days: number, hours: number, minutes: number, quotaAvailable?: boolean) {
   const nextRefresh = new Date();
-  nextRefresh.setMinutes(nextRefresh.getMinutes() + minutes);
-  nextRefresh.setHours(nextRefresh.getHours() + hours);
+  const totalMinutes = (days * 1440) + (hours * 60) + minutes;
+  nextRefresh.setMinutes(nextRefresh.getMinutes() + totalMinutes);
 
   await prisma.account.update({
     where: { id },
@@ -38,10 +38,10 @@ export async function setClaudeCooldown(id: string, hours: number, minutes: numb
   revalidatePath("/");
 }
 
-export async function setGeminiCooldown(id: string, hours: number, minutes: number, quotaAvailable?: boolean) {
+export async function setGeminiCooldown(id: string, days: number, hours: number, minutes: number, quotaAvailable?: boolean) {
   const nextRefresh = new Date();
-  nextRefresh.setMinutes(nextRefresh.getMinutes() + minutes);
-  nextRefresh.setHours(nextRefresh.getHours() + hours);
+  const totalMinutes = (days * 1440) + (hours * 60) + minutes;
+  nextRefresh.setMinutes(nextRefresh.getMinutes() + totalMinutes);
 
   await prisma.account.update({
     where: { id },

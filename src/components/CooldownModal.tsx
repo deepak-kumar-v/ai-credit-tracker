@@ -17,6 +17,7 @@ export function CooldownModal({
   onClose: () => void 
 }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!type) return null;
 
@@ -24,14 +25,22 @@ export function CooldownModal({
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
+    const days = parseInt(formData.get("days") as string) || 0;
     const hours = parseInt(formData.get("hours") as string) || 0;
     const minutes = parseInt(formData.get("minutes") as string) || 0;
     const quotaAvailable = formData.get("quotaStatus") === "available";
 
+    if (days === 0 && hours === 0 && minutes === 0) {
+      setError("Error: Refresh period must be greater than 0");
+      setLoading(false);
+      return;
+    }
+    setError("");
+
     if (type === "CLAUDE") {
-      await setClaudeCooldown(accountId, hours, minutes, quotaAvailable);
+      await setClaudeCooldown(accountId, days, hours, minutes, quotaAvailable);
     } else {
-      await setGeminiCooldown(accountId, hours, minutes, quotaAvailable);
+      await setGeminiCooldown(accountId, days, hours, minutes, quotaAvailable);
     }
     
     setLoading(false);
@@ -83,7 +92,17 @@ export function CooldownModal({
           
           <div>
             <label className="block text-xs uppercase mb-2 text-[#a1a1aa]">Refresh period:</label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <input 
+                  type="number" 
+                  name="days"
+                  min="0"
+                  defaultValue={0}
+                  className="terminal-input w-full p-2 text-center text-lg mb-1"
+                />
+                <label className="block text-[10px] uppercase text-[#a1a1aa] text-center">Days</label>
+              </div>
               <div>
                 <input 
                   type="number" 
@@ -107,6 +126,12 @@ export function CooldownModal({
               </div>
             </div>
           </div>
+
+          {error && (
+            <div className="text-red-500 text-xs mt-2 blink">
+              {error}
+            </div>
+          )}
 
           <div className="pt-4 flex justify-end gap-3">
             <button 
