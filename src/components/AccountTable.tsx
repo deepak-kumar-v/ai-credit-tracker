@@ -6,6 +6,7 @@ import { AccountWithTimers } from "@/lib/timers";
 import { formatMs } from "@/hooks/useTimers";
 import { CooldownModal } from "./CooldownModal";
 import { DeleteModal } from "./DeleteModal";
+import { EditPlanModal } from "./EditPlanModal";
 
 export function AccountTable({ 
   accounts,
@@ -27,6 +28,13 @@ export function AccountTable({
     accountEmail: string;
     isOpen: boolean;
   }>({ accountId: "", accountEmail: "", isOpen: false });
+
+  const [editPlanState, setEditPlanState] = useState<{
+    accountId: string;
+    accountEmail: string;
+    currentPlan: string;
+    isOpen: boolean;
+  }>({ accountId: "", accountEmail: "", currentPlan: "none", isOpen: false });
 
   function openModal(acc: AccountWithTimers, type: "CLAUDE" | "GEMINI") {
     setModalState({ accountId: acc.id, accountEmail: acc.email, type });
@@ -56,8 +64,8 @@ export function AccountTable({
               <td className={`py-3 px-4 truncate border border-[#333] ${isRecommended ? 'text-[#22c55e]' : ''}`}>
                 {acc.email}
               </td>
-              <td className={`py-3 px-4 border border-[#333] ${acc.planType === 'monthly_trial' ? 'text-[#facc15]' : 'text-[#a1a1aa]'}`}>
-                {acc.planType === 'monthly_trial' ? 'monthly_trial' : 'yearly'}
+              <td className={`py-3 px-4 border border-[#333] ${acc.plan === 'monthly_trial' ? 'text-[#facc15]' : acc.plan === 'unknown' ? 'text-yellow-400' : 'text-[#a1a1aa]'}`}>
+                {acc.plan === 'monthly_trial' ? 'Trial' : acc.plan === 'yearly' ? 'Yearly' : acc.plan === 'none' ? 'None' : '?'}
               </td>
               <td className="py-3 px-4 border border-[#333] whitespace-nowrap">
                 {acc.claudeQuotaAvailable ? (
@@ -95,6 +103,14 @@ export function AccountTable({
                   >
                     <span className="opacity-0 group-hover:opacity-100 text-[#22c55e] mr-1">&gt;</span>
                     set_gemini
+                  </button>
+                  <span className="opacity-50">·</span>
+                  <button 
+                    onClick={() => setEditPlanState({ accountId: acc.id, accountEmail: acc.email, currentPlan: acc.plan, isOpen: true })}
+                    className="hover:text-white transition-colors group flex items-center"
+                  >
+                    <span className="opacity-0 group-hover:opacity-100 text-[#22c55e] mr-1">&gt;</span>
+                    edit_plan
                   </button>
                   <span className="opacity-50">·</span>
                   <button 
@@ -136,6 +152,15 @@ export function AccountTable({
             deleteAccount(deleteState.accountId);
             setDeleteState({ accountId: "", accountEmail: "", isOpen: false });
           }}
+        />
+      )}
+      
+      {editPlanState.isOpen && (
+        <EditPlanModal
+          accountId={editPlanState.accountId}
+          accountEmail={editPlanState.accountEmail}
+          currentPlan={editPlanState.currentPlan}
+          onClose={() => setEditPlanState({ accountId: "", accountEmail: "", currentPlan: "none", isOpen: false })}
         />
       )}
     </div>

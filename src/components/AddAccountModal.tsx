@@ -50,13 +50,12 @@ export function AddAccountModal() {
 
               <div>
                 <label className="block text-sm uppercase mb-2 text-[#a1a1aa]">Plan Type</label>
-                <div className="flex gap-4 mt-2">
+                <div className="flex flex-col gap-2 mt-2">
                   <label className="flex items-center gap-2 cursor-pointer text-sm">
                     <input 
                       type="radio" 
-                      name="planType" 
+                      name="plan" 
                       value="yearly"
-                      defaultChecked
                       className="accent-[#22c55e]"
                     />
                     <span className="text-white">Yearly Plan</span>
@@ -64,11 +63,30 @@ export function AddAccountModal() {
                   <label className="flex items-center gap-2 cursor-pointer text-sm">
                     <input 
                       type="radio" 
-                      name="planType" 
+                      name="plan" 
                       value="monthly_trial"
                       className="accent-[#22c55e]"
                     />
-                    <span className="text-[#a1a1aa]">Monthly Trial</span>
+                    <span className="text-white">Monthly Trial</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="plan" 
+                      value="none"
+                      className="accent-[#22c55e]"
+                    />
+                    <span className="text-[#a1a1aa]">No Plan</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input 
+                      type="radio" 
+                      name="plan" 
+                      value="unknown"
+                      defaultChecked
+                      className="accent-[#22c55e]"
+                    />
+                    <span className="text-yellow-400">Decide Later</span>
                   </label>
                 </div>
               </div>

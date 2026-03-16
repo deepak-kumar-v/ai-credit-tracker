@@ -14,8 +14,15 @@ model Account {
   geminiNextRefresh    DateTime?
   claudeQuotaAvailable Boolean   @default(true)
   geminiQuotaAvailable Boolean   @default(true)
-  planType             String    @default("yearly")
+  plan                 PlanType  @default(unknown)
   createdAt            DateTime  @default(now())
+}
+
+enum PlanType {
+  yearly
+  monthly_trial
+  none
+  unknown
 }
 
 model PushSubscription {

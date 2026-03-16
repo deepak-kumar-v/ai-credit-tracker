@@ -11,16 +11,27 @@ export async function getAccounts() {
 
 export async function addAccount(formData: FormData) {
   const email = formData.get("email") as string;
-  const planType = formData.get("planType") as string || "yearly";
+  const plan = (formData.get("plan") as string) || "unknown";
 
   if (!email) {
     throw new Error("Invalid input");
   }
 
   await prisma.account.create({
-    data: { email, planType },
+    data: { 
+      email, 
+      plan: plan as any 
+    },
   });
 
+  revalidatePath("/");
+}
+
+export async function editPlan(id: string, plan: "yearly" | "monthly_trial" | "none" | "unknown") {
+  await prisma.account.update({
+    where: { id },
+    data: { plan }
+  });
   revalidatePath("/");
 }
 
